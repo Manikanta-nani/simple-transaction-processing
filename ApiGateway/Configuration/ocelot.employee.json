@@ -1,0 +1,12 @@
+{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/api/{everything}",
+      "DownstreamScheme": "http",
+      "ServiceName": "Employees",
+      "UpstreamPathTemplate": "/api/Employees/{everything}",
+      "UpstreamHttpMethod": [],
+      "SwaggerKey": "Employees"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "SwaggerEndPoints": [
+    {
+      "Key": "Customers",
+      "Config": [
+        {
+          "Name": "customers API",
+          "Version": "v1",
+          "Service": {
+            "Name": "customers",
+            "Path": "/swagger/v1/swagger.json"
+          }
+        }
+      ]
+    },
+    {
+      "Key": "Employees",
+      "Config": [
+        {
+          "Name": "Ecmployees API",
+          "Version": "v1",
+          "Service": {
+            "Name": "Ecmployees",
+            "Path": "/swagger/v1/swagger.json"
+          }
+        }
+      ]
+    }
+   
+  ]
+}

@@ -1,0 +1,25 @@
+version: '3.4'
+
+services:
+  newgatewayapi:
+    container_name: gateway.api
+    image: ${DOCKER_REGISTRY-}newgatewayapi
+    build:
+      context: .
+      dockerfile: NewGatewayAPI/Dockerfile
+
+  customer.api:
+    container_name: customer.api
+    image: ${DOCKER_REGISTRY-}customerapi
+    build:
+      context: .
+      dockerfile: Customer.API/Dockerfile
+
+
+  employee.api:
+    container_name: employee.api
+    image: ${DOCKER_REGISTRY-}employeeapi
+    build:
+      context: .
+      dockerfile: Employee.API/Dockerfile
+

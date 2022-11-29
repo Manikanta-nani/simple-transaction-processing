@@ -1,0 +1,61 @@
+﻿{
+  "Routes": [
+
+    {
+      "DownstreamPathTemplate": "/api/v1/Custom",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5065
+        }
+      ],
+      "UpstreamPathTemplate": "/api/Customers",
+      "UpstreamHttpMethod": [
+        "Get"
+      ]
+      // "SwaggerKey": "customers"
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Employee",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5179
+        }
+      ],
+      "UpstreamPathTemplate": "/api/Employee",
+      "UpstreamHttpMethod": [
+        "Get"
+      ]
+      // "SwaggerKey": "employees"
+    }
+
+  ],
+  //"SwaggerEndPoints": [
+  //  {
+  //    "Key": "employees",
+  //    "Config": [
+  //      {
+  //        "Name": "employees API",
+  //        "Version": "v1",
+  //        "Url": "http://localhost:7179/swagger/v1/swagger.json"
+  //      }
+  //    ]
+  //  },
+  //  {
+  //    "Key": "customers",
+  //    "Config": [
+  //      {
+  //        "Name": "customers API",
+  //        "Version": "v1",
+  //        "Url": "http://localhost:7065/swagger/v1/swagger.json"
+  //      }
+  //    ]
+  //  }
+  //],
+  "GlobalConfiguration": {
+    "BaseUrl": "http://localhost:7101"
+  }
+}
