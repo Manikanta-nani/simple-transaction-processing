@@ -24,6 +24,7 @@ services:
       dockerfile: Employee.API/Dockerfile
 
   cache:
+    container_name: redisjson
     image: redislabs/rejson:latest
     restart: always
     ports:

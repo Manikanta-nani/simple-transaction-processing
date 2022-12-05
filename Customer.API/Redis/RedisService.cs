@@ -6,21 +6,10 @@ namespace Customer.API.Redis
     {
         public static string TestConnection()
         {
-            var connection = ConnectionMultiplexer.Connect("localhost:6379");
+            var connection = ConnectionMultiplexer.Connect("redisjson:6379,allowAdmin=true");
 
-            // Server is frequently where more "admin" type operations are
             var server = connection.GetServer(connection.GetEndPoints().First());
-            var serverInfo = server.InfoRaw();
-
-            /* serverInfo should contain a string like:
-                # Server
-                redis_version:4.0.9
-                redis_git_sha1:00000000
-                redis_git_dirty:0
-                redis_build_id:9435c3c2879311f3
-                redis_mode:standalone
-                ...
-            */
+            var serverInfo = server.InfoRaw();            
 
             return serverInfo;
         }
