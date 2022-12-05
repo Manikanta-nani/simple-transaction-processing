@@ -1,3 +1,4 @@
+using Customer.API.Redis;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Customer.API.Controllers
@@ -21,6 +22,7 @@ namespace Customer.API.Controllers
         [HttpGet(Name = "GetCustomers")]
         public IEnumerable<string> GetCustomers()
         {
+           var info= RedisService.TestConnection();
             return Cutsomers;
         }
     }

@@ -23,3 +23,13 @@ services:
       context: .
       dockerfile: Employee.API/Dockerfile
 
+  cache:
+    image: redislabs/rejson:latest
+    restart: always
+    ports:
+      - '6379:6379'
+    volumes: 
+      - cache:/data
+volumes:
+  cache:
+     driver: local
