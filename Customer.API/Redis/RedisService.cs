@@ -4,14 +4,11 @@ namespace Customer.API.Redis
 {
     public class RedisService
     {
-        public static string TestConnection()
+        public static ConnectionMultiplexer GetConnection()
         {
-            var connection = ConnectionMultiplexer.Connect("redisjson:6379,allowAdmin=true");
+            var mutiplexer = ConnectionMultiplexer.Connect("redisjson:6379,allowAdmin=true");                       
 
-            var server = connection.GetServer(connection.GetEndPoints().First());
-            var serverInfo = server.InfoRaw();            
-
-            return serverInfo;
+            return mutiplexer;
         }
     }
 }

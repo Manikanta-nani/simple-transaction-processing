@@ -1,29 +1,67 @@
 using Customer.API.Redis;
 using Microsoft.AspNetCore.Mvc;
+using StackExchange.Redis;
+using Customer.API.Models;
+using NReJSON;
+using Newtonsoft.Json;
 
 namespace Customer.API.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
-    public class CustomController : ControllerBase
+    public class CustomerController : ControllerBase
     {
         private static readonly string[] Cutsomers = new[]
         {
         "Custom1", "Custom2", "Custom3", "Custom4", "Custom6"
     };
 
-        private readonly ILogger<CustomController> _logger;
+        private readonly ILogger<CustomerController> _logger;
+        private IConnectionMultiplexer _connectionMultiplexer;
 
-        public CustomController(ILogger<CustomController> logger)
+        public CustomerController(ILogger<CustomerController> logger)
         {
             _logger = logger;
+            _connectionMultiplexer = RedisService.GetConnection();
         }
 
         [HttpGet(Name = "GetCustomers")]
-        public IEnumerable<string> GetCustomers()
+        public async Task<ActionResult> GetCustomers(string email)
         {
-           var info= RedisService.TestConnection();
-            return Cutsomers;
+            // var redisConnection= RedisService.TestConnection();
+
+
+            IDatabase db = _connectionMultiplexer.GetDatabase();
+            string key = "customer:" + email.ToLower();
+            string[] parms = { "." };
+            RedisResult result = await db.JsonGetAsync(key, parms);
+            if (result.IsNull) { return null; };
+            string profile = (string)result;
+            return Ok(profile);
         }
+
+        [HttpPost(Name = "SaveCustomer")]
+        public async Task<ActionResult> SaveCustomer(CustomerModel customer)
+        {
+            // var redisConnection= RedisService.TestConnection();
+            IDatabase db = _connectionMultiplexer.GetDatabase();
+            string key = "customer:" + customer.Email.ToLower();
+            string json = JsonConvert.SerializeObject(customer);
+            try
+            {
+                OperationResult result = await db.JsonSetAsync(key, json);
+                if (result.IsSuccess) { return Ok("Save customer Profile Succeeded"); }
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }         
+
+            
+
+            return BadRequest("Save customer Profile  Failed");
+            
+        }
+
     }
 }
