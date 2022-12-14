@@ -37,6 +37,19 @@ namespace Customer.API.Controllers
             return Ok(profile);
         }
 
+        private async Task<List<PhoneNumber>> GetPhoneNumber(string key)
+        {
+            // var redisConnection= RedisService.TestConnection();
+
+            IDatabase db = _connectionMultiplexer.GetDatabase();
+            
+            string[] parms = { ".PhoneNumbers" };
+            RedisResult result = await db.JsonGetAsync(key, parms);
+            if (result.IsNull) { return null; };
+            var phoneNumbers = JsonConvert.DeserializeObject<List<PhoneNumber>>(result.ToString());
+            return phoneNumbers;
+        }
+
         [HttpPut(Name = "UpdateCustomer")]        
         public async Task<ActionResult> UpdateCustomer(UpdateModel updateModel)
         {
@@ -51,7 +64,50 @@ namespace Customer.API.Controllers
                 {
                     foreach (var item in updateModel.UpdateEntries)
                     {
-                        await db.JsonSetAsync(key, JsonConvert.SerializeObject(item.Value), item.Path);
+                        if(item.Path.Contains("Phone"))
+                        {
+                            var phoneItems = JsonConvert.DeserializeObject<List<PhoneNumber>>(item.Value);
+                            var phoneNumbers = await GetPhoneNumber(key);
+                           //removing existing items
+                            await db.JsonSetAsync(key, JsonConvert.SerializeObject(null), item.Path);
+                            foreach(var phoneItem in phoneItems)
+                            {
+                                if (phoneNumbers != null && phoneNumbers.Any())
+                                {
+
+                                    if (phoneNumbers.Any(ph => ph.Id == phoneItem.Id))
+                                    {
+                                        phoneNumbers.ForEach(ph => {
+
+                                            if (ph.Id == phoneItem.Id)
+                                            {
+                                                ph.Type = phoneItem.Type;
+                                                ph.Number = phoneItem.Number;
+                                            }
+
+                                        });
+                                    }
+                                    else
+                                    {
+                                        phoneNumbers.Add(phoneItem);
+                                    }
+
+                                }
+                                else
+                                {
+                                    phoneNumbers = new List<PhoneNumber>();
+                                    phoneNumbers.Add(phoneItem);
+                                }
+                            }
+                            
+                            await db.JsonSetAsync(key, JsonConvert.SerializeObject(phoneNumbers), item.Path);
+
+                        }
+                        else
+                        {
+                            await db.JsonSetAsync(key, JsonConvert.SerializeObject(item.Value), item.Path);
+                        }
+                        
                     }
 
                 }
